@@ -3,8 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
 </head>
 <body>
-<h1>index page</h1>
+<!--<button onclick="register()">发送</button>-->
+
+<form action="/saveImg" method="POST" enctype="multipart/form-data">
+    <input type="text" name="name" value="">
+    <br>
+    <input type="file" name="avatarFile" value="">
+    <input type="submit" value="提交">
+</form>
 </body>
 </html>

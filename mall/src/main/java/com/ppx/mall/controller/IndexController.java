@@ -69,9 +69,11 @@ public class IndexController {
         List<Product> products=null;
         if("手机".equals(title)){
             //找宣传图
+            //System.out.println("----");
             productPromoList=productPromoService.findPromoByTitle(1);
             //获取产品集合
             products=productService.getProductByTitleId(1,0L,6L);
+            //System.out.println("========");
         }
         if("家电".equals(title)){
             //找宣传图
@@ -80,15 +82,19 @@ public class IndexController {
             products=productService.getProductByTitleId(3,0L,6L);
         }
         //将宣传图放入容器
-        if(productPromoList.size()==1){
-            vpb.setProduct1(productPromoList.get(0));
-        }else if(productPromoList.size()==2){
-            vpb.setProduct1(productPromoList.get(0));
-            vpb.setProduct2(productPromoList.get(1));
-        }
-        //将产品放入容器
-        if(products!=null||products.size()!=0){
-            vpb.setProducts(products);
+        if(productPromoList!=null||products!=null){
+            vpb=new ViewProductBody();
+            //只有一张图
+            if(productPromoList!=null&&productPromoList.size()==1){
+                vpb.setProduct1(productPromoList.get(0));
+            }else if(productPromoList.size()==2){//有两张图
+                vpb.setProduct1(productPromoList.get(0));
+                vpb.setProduct2(productPromoList.get(1));
+            }
+            //将产品放入容器
+            if(products!=null||products.size()!=0){
+                vpb.setProducts(products);
+            }
         }
         return vpb;
     }

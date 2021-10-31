@@ -1,9 +1,13 @@
 package com.ppx.mall.filter;
 
+import com.alibaba.fastjson.JSONObject;
+import com.ppx.mall.bean.User;
+
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 @WebFilter(filterName="customFilter",urlPatterns={"/*"})
 public class Filter implements javax.servlet.Filter {
@@ -17,9 +21,9 @@ public class Filter implements javax.servlet.Filter {
         try {
             HttpServletResponse resp = (HttpServletResponse) servletResponse;
             resp.setHeader("Access-Control-Allow-Origin", "*");
-            filterChain.doFilter(servletRequest, servletResponse);
+            filterChain.doFilter(servletRequest,servletResponse);
         }catch(Exception e){
-            System.out.println("出现异常");
+            e.printStackTrace();
         }
     }
 
