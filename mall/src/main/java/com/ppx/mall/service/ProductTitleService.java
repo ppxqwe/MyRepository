@@ -8,4 +8,6 @@ public interface ProductTitleService {
     List<ProductTitle> findProductTitleAll();
 
     Integer findTitleIdByTitle(String titleName);
+
+    String finTitleById(Integer id);
 }

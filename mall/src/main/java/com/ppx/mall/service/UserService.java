@@ -8,4 +8,5 @@ public interface UserService {
     boolean existAccount(String account);//判断账号是否存在
     boolean existName(String userName);//判断昵称是否存在
     User getUser(String account);//根据账号返回User
+    int setUser(User user);//更新user
 }

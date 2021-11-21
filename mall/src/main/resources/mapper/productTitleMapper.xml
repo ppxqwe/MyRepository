@@ -30,6 +30,10 @@
         SELECT id FROM product_title pt WHERE title=#{title}
     </select>
 
+    <select id="finTitleById" resultType="String" parameterType="int">
+        select title from product_title pt where id=#{id}
+    </select>
+
     <!-- 根据主键查询信息 -->
     <select id="findProductTitleByIds" resultMap="productTitleMap" parameterType="list">
         SELECT

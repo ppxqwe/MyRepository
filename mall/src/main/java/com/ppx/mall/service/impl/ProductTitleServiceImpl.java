@@ -24,4 +24,9 @@ public class ProductTitleServiceImpl implements ProductTitleService {
     public Integer findTitleIdByTitle(String titleName){
         return productTitleDao.findProductTitleByTitleName(titleName);
     }
+
+
+    public String finTitleById(Integer id){
+        return productTitleDao.finTitleById(id);
+    }
 }

@@ -12,4 +12,6 @@ public interface ProductTitleDao {
     List<ProductTitle> findProductTitleAll();
 
     Integer findProductTitleByTitleName(String title);
+
+    String finTitleById(Integer id);
 }

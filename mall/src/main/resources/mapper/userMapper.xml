@@ -70,29 +70,28 @@
         )
     </insert>
 
-    <!-- 批量新增信息 -->
-    <insert id="addUsers" parameterType="list">
-        INSERT INTO user (
-            account, password, userName
-        ) VALUES
-        <foreach collection="list" index="index" item="item" separator=",">
-            (
-                #{item.account},
-                #{item.password},
-                #{item.userName}
-            )
-        </foreach>
-    </insert>
 
     <!-- 修改信息 -->
-    <update id="updateUser">
+    <update id="updateUser" parameterType="User">
         UPDATE user
         <set>
             <if test="password != null">
                 password = #{password},
             </if>
+            <if test="userName != null">
+                userName = #{userName},
+            </if>
+            <if test="avatarSrc != null">
+                avatarSrc = #{avatarSrc},
+            </if>
+            <if test="address != null">
+                address = #{address},
+            </if>
+            <if test="telephone != null">
+                telephone = #{telephone},
+            </if>
             <if test="name != null">
-                userName = #{userName}
+                name = #{name}
             </if>
         </set>
         WHERE account = #{account}

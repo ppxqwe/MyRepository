@@ -1,22 +1,22 @@
 package com.ppx.mall.controller;
 
-import com.ppx.mall.bean.Product;
-import com.ppx.mall.bean.ProductPromo;
-import com.ppx.mall.bean.ProductTitle;
-import com.ppx.mall.bean.Slideshow;
-import com.ppx.mall.dao.ProductPromoDao;
+import com.ppx.mall.bean.*;
+
 import com.ppx.mall.service.ProductPromoService;
 import com.ppx.mall.service.ProductTitleService;
 import com.ppx.mall.service.ProductService;
 import com.ppx.mall.service.SlideshowService;
+
+import com.ppx.mall.util.ResponseUtil;
+import com.ppx.mall.util.SuccessResponse;
 import com.ppx.mall.viewObject.ViewProductBody;
 import com.ppx.mall.viewObject.ViewProductHead;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -109,4 +109,21 @@ public class IndexController {
 //        inputStream.read(bytes, 0, inputStream.available());
 //        return bytes;
 //    }
+
+    @ResponseBody
+    @RequestMapping("/detailsPage")
+    public Product detailsPage(String id){
+        Product p=productService.getProductById(Long.parseLong(id));
+        List<ProductImg> s=productService.getProductImg(Long.parseLong(id));
+        p.setImgDetails(s);
+        return p;
+    }
+
+    @ResponseBody
+    @RequestMapping("/test")
+    public SuccessResponse test(){
+        SuccessResponse s=new SuccessResponse();
+        s.addMessage("user","user");
+        return s;
+    }
 }

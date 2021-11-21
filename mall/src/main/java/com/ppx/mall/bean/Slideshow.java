@@ -14,7 +14,7 @@ public class Slideshow implements java.io.Serializable {
 
     private Long id;
 
-    private String url;
+    private String productId;
 
     private String imgSrc;
 
@@ -30,12 +30,12 @@ public class Slideshow implements java.io.Serializable {
         this.id = id;
     }
 
-    public String getUrl() {
-        return this.url;
+    public String getProductId() {
+        return this.productId;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setProductId(String productId) {
+        this.productId = productId;
     }
 
     public String getImgSrc() {

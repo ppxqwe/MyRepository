@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
     public boolean existName(String userName){
         Map<String,Object> map=new HashMap<String,Object>();
         map.put("userName",userName);
-        if(userDao.findUserByCondition(map)!=null){
+        if(userDao.findUserByCondition(map).size()>=1){
             return true;
         }
         return false;
@@ -57,6 +57,10 @@ public class UserServiceImpl implements UserService {
 
     public User getUser(String account){
         return userDao.findUserById(account);
+    }
+
+    public int setUser(User user){
+        return userDao.updateUser(user);
     }
 
 }
