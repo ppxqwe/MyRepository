@@ -2,7 +2,6 @@ package com.ppx.mall.controller;
 
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.ppx.mall.bean.Cart;
 import com.ppx.mall.bean.Product;
@@ -12,6 +11,7 @@ import com.ppx.mall.service.ProductService;
 import com.ppx.mall.util.ErrorResponse;
 import com.ppx.mall.util.ResponseUtil;
 import com.ppx.mall.util.SuccessResponse;
+import com.ppx.mall.viewObject.ViewCart;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -43,7 +44,7 @@ public class CartController {
             return r;
         }
         //拿到商品id
-        Long id=Long.parseLong((String)j.get("id"));
+        Long id=Long.parseLong(j.get("id").toString());
         Product p=productService.getProductById(id);
         if(ObjectUtil.isEmpty(p)){
             return new ErrorResponse("error","商品不存在");
@@ -66,7 +67,7 @@ public class CartController {
         c.setCost(c.getCount()*c.getPrice());
         int result=cartService.updateCart(c);
         if(result==1){
-            return new SuccessResponse("success");
+            return new SuccessResponse();
         }
         return new ErrorResponse("error","添加购物车失败");
     }
@@ -78,15 +79,31 @@ public class CartController {
      */
     @ResponseBody
     @RequestMapping("/getCart")
-    public ResponseUtil getCart(@RequestBody JSONObject j,HttpServletRequest req){
+    public ResponseUtil getCart(@RequestBody(required = false) JSONObject j,HttpServletRequest req){
         ResponseUtil responseUtil=this.checkUserLogin(j,req);
         if(responseUtil!=null){
             return responseUtil;
         }
         User user=(User)req.getSession().getAttribute("session");
         List<Cart> cartList=cartService.getCartByAccount(user.getAccount());
-        SuccessResponse r= new SuccessResponse("success");
-        r.addMessage("cart",cartList);
+        List<ViewCart> viewCarts=new ArrayList<>();
+        if(cartList!=null&&cartList.size()>0){
+            for(Cart cart:cartList){
+                ViewCart vc=new ViewCart(
+                        cart.getId(),
+                        cart.getProductId(),
+                        cart.getName(),
+                        cart.getImgSrc(),
+                        cart.getPrice(),
+                        cart.getCount(),
+                        cart.getCost(),
+                        cart.getTitle()
+                );
+                viewCarts.add(vc);
+            }
+        }
+        SuccessResponse r= new SuccessResponse();
+        r.addMessage("cart",viewCarts);
         return r;
     }
 
@@ -122,7 +139,7 @@ public class CartController {
                 }*/
                 int result=cartService.updateCart(cart);
                 if(result==1){
-                    return new SuccessResponse("success");
+                    return new SuccessResponse();
                 }
             }
             return new ErrorResponse("数量不正确，count必须是1或-1");
@@ -162,14 +179,11 @@ public class CartController {
     @ResponseBody
     @RequestMapping("/clearCart")//根据账号清空购物车
     public ResponseUtil clearCart(String account,HttpServletRequest req){
-        account=Base64.decodeStr(account);
+        ResponseUtil r=this.checkUserLogin(account,req);
+        if(r!=null){
+            return r;
+        }
         User user=(User)req.getSession().getAttribute("session");
-        if(user==null){
-            return new ErrorResponse("用户未登录");
-        }
-        if(!user.getAccount().equals(account)){
-            return new ErrorResponse("用户不一致");
-        }
         int result=cartService.deleteCartByAccount(user.getAccount());
         if(result!=-1){
             return new SuccessResponse();
@@ -180,23 +194,27 @@ public class CartController {
 
     @ResponseBody
     @RequestMapping("/deleteCart")//删除购物车中的某个商品
-    public ResponseUtil deleteCart(String account,Long id,HttpServletRequest req){
-        account=Base64.decodeStr(account);
-        User user=(User)req.getSession().getAttribute("session");
-        if(user==null){
-            return new ErrorResponse("用户未登录");
+    public ResponseUtil deleteCart(@RequestBody JSONObject data, HttpServletRequest req){
+        ResponseUtil r=this.checkUserLogin(data,req);
+        if(r!=null){
+            return r;
         }
-        if(!user.getAccount().equals(account)){
-            return new ErrorResponse("账号不一致");
+        List ids=(List)data.get("ids");
+        if(ids==null||ids.size()==0){
+            return new ErrorResponse("没有要删除的商品");
         }
-        Cart cart=cartService.findCartById(id);
-        if(cart.getAccount().equals(user.getAccount())){
-            int result=cartService.deleteCartById(id);
-            if(result==1){
-                return new SuccessResponse();
+        Long[] idArray=new Long[ids.size()];
+        for(int a=0;a<ids.size();a++){
+            idArray[a]=Long.parseLong(ids.get(a).toString());
+        }
+        for(int i=0;i<idArray.length;i++){
+            Cart cart=cartService.findCartById(idArray[i]);
+            User user=(User)req.getSession().getAttribute("session");
+            if(cart!=null&&cart.getAccount().equals(user.getAccount())){
+                cartService.deleteCartById(idArray[i]);
             }
         }
-        return new ErrorResponse("删除错误");
+        return new SuccessResponse();
     }
 
 
@@ -206,6 +224,9 @@ public class CartController {
             return new ErrorResponse("参数为空");
         }
         String account=(String)j.get("account");
+        return checkUserLogin(account,req);
+    }
+    public ResponseUtil checkUserLogin(String  account,HttpServletRequest req){
         account=Base64.decodeStr(account);
         User user=(User)req.getSession().getAttribute("session");
         if(user==null){
@@ -214,7 +235,6 @@ public class CartController {
         if(!user.getAccount().equals(account)){
             return new ErrorResponse("用户不一致");
         }
-        //没有出现错误
         return null;
     }
 }

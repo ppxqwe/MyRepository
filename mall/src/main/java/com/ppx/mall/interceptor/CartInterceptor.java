@@ -8,11 +8,11 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@Service
-public class UserInterceptor implements HandlerInterceptor {
+//@Service
+public class CartInterceptor implements HandlerInterceptor {
 
     @Override
-    public boolean preHandle(HttpServletRequest request,
+    public boolean preHandle(HttpServletRequest req,
                       HttpServletResponse response, Object handler)
             throws Exception {
         return true;

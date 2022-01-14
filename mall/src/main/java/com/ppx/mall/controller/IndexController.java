@@ -1,11 +1,9 @@
 package com.ppx.mall.controller;
 
+import cn.hutool.core.codec.Base64;
 import com.ppx.mall.bean.*;
 
-import com.ppx.mall.service.ProductPromoService;
-import com.ppx.mall.service.ProductTitleService;
-import com.ppx.mall.service.ProductService;
-import com.ppx.mall.service.SlideshowService;
+import com.ppx.mall.service.*;
 
 import com.ppx.mall.util.ResponseUtil;
 import com.ppx.mall.util.SuccessResponse;
@@ -15,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
@@ -33,6 +32,9 @@ public class IndexController {
 
     @Autowired
     ProductPromoService productPromoService;
+
+    @Autowired
+    CollectionService collectionService;
 
     @ResponseBody
     @RequestMapping("/head")
@@ -112,18 +114,20 @@ public class IndexController {
 
     @ResponseBody
     @RequestMapping("/detailsPage")
-    public Product detailsPage(String id){
+    public Product detailsPage(String id, String account){
+        account= Base64.decodeStr(account);
         Product p=productService.getProductById(Long.parseLong(id));
-        List<ProductImg> s=productService.getProductImg(Long.parseLong(id));
+        if(p==null){
+            return null;
+        }
+        //查询详情也的图片集合
+        List<ProductImg> s=productService.getProductImg(p.getId());
         p.setImgDetails(s);
+        //查询该商品是否加入收藏
+        CollectionProduct isLove=collectionService.isLove(account,p.getId());
+        if(isLove!=null){
+            p.setIsLove(true);
+        }
         return p;
-    }
-
-    @ResponseBody
-    @RequestMapping("/test")
-    public SuccessResponse test(){
-        SuccessResponse s=new SuccessResponse();
-        s.addMessage("user","user");
-        return s;
     }
 }

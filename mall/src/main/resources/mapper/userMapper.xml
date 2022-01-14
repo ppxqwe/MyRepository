@@ -36,10 +36,10 @@
             <include refid="allColumns" />
         FROM user u WHERE 1 = 1
         <if test="password != null and password != ''">
-            AND u.password LIKE CONCAT('%', #{password}, '%')
+            AND u.password = #{password}
         </if>
         <if test="userName != null and userName != ''">
-            AND u.userName LIKE CONCAT('%', #{userName}, '%')
+            AND u.userName= #{userName}
         </if>
     </select>
 

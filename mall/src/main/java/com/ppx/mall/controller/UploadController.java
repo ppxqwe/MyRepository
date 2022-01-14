@@ -4,6 +4,8 @@ import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.StrUtil;
 import com.ppx.mall.bean.User;
 import com.ppx.mall.service.UserService;
+import com.ppx.mall.util.ErrorResponse;
+import com.ppx.mall.util.ResponseUtil;
 import com.ppx.mall.util.SuccessResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,17 +54,14 @@ public class UploadController {
 
     @ResponseBody
     @RequestMapping("/saveImg")
-    public SuccessResponse saveImg2(MultipartFile avatarFile, String account){
-        SuccessResponse responseUtil=new SuccessResponse();
+    public ResponseUtil saveImg2(MultipartFile avatarFile, String account){
         if (StrUtil.isEmpty(account)) {
-            return null;
+            return new ErrorResponse("账号为空");
         }
         account=Base64.decodeStr(account);
         try{
             if(avatarFile==null){
-                responseUtil.setStatus("error");
-                responseUtil.addMessage("reason","file is null");
-                return responseUtil;
+                return new ErrorResponse("file is null");
             }
             String path="/www/server/tomcat9/webapps/imgServer/image/";
             User user=userService.getUser(account);//拿到user
@@ -75,36 +74,36 @@ public class UploadController {
             account=Base64.encode(account+randomId);
             //存储图片
             avatarFile.transferTo(new File(path,account+".jpg"));
-            String avatarSrc="http://ppxtest.xyz:8077/imgServer/image/"+account+".jpg";
-            if(StrUtil.isEmpty(oldImg)){
+            String avatarSrc="http://ppxtest.xyz:80/imgServer/image/"+account+".jpg";
+
+            if(StrUtil.isEmpty(oldImg)){//如果该账号没有存储过头像 头像路径一定为空
                 //直接更新图片
                 user.setAvatarSrc(avatarSrc);
                 int count=userService.setUser(user);//更新头像
                 if(count==1){//更新成功
-                    responseUtil.setStatus("success");
-                    responseUtil.addMessage("avatarSrc",avatarSrc);
-                    return responseUtil;
+                    SuccessResponse s=new SuccessResponse();
+                    s.addMessage("avatarSrc",avatarSrc);
+                    return s;
                 }
-            }
-            //不为空就要删除图片
-            String imgFileName=oldImg.substring(40);//截取出图片的文件名
-            //删除原来存的图片
-            File file=new File(path+imgFileName);
-            boolean result=file.delete();
-            if(result){//删除成功
+            }else{
+                //不为空就要删除图片
+                String imgFileName=oldImg.substring(38);//截取出图片的文件名
+                //删除原来存的图片
+                File file=new File(path+imgFileName);
+                boolean result=file.delete(); //正常情况下result==true
+                System.out.println("删除图片"+result);
+
                 user.setAvatarSrc(avatarSrc);
                 int count=userService.setUser(user);//更新头像
                 if(count==1){//更新成功
-                    responseUtil.setStatus("success");
-                    responseUtil.addMessage("avatarSrc",avatarSrc);
-                    return responseUtil;
+                    SuccessResponse s=new SuccessResponse();
+                    s.addMessage("avatarSrc",avatarSrc);
+                    return s;
                 }
             }
         }catch (Exception e) {
             e.printStackTrace();
         }
-        responseUtil.setStatus("error");
-        responseUtil.addMessage("reason","saveImg error");
-        return responseUtil;
+        return new ErrorResponse("上传头像错误");
     }
 }

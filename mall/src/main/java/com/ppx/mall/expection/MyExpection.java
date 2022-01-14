@@ -4,9 +4,9 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 
-//@ControllerAdvice
+@ControllerAdvice
 public class MyExpection{
-    //@ExceptionHandler(Exception.class)
+    @ExceptionHandler(Exception.class)
     public ModelAndView handler(Exception e){
         ModelAndView mv=new ModelAndView();
         mv.setViewName("error");

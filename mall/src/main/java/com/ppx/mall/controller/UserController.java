@@ -8,8 +8,10 @@ import com.ppx.mall.bean.User;
 import com.ppx.mall.util.*;
 import com.ppx.mall.service.UserService;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -19,7 +21,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.UnsupportedEncodingException;
-
 
 @Controller
 public class UserController {
@@ -56,6 +57,9 @@ public class UserController {
                 resultUser.getTelephone(),
                 resultUser.getName()
                 );
+        if(StrUtil.isEmpty(user.getAvatarSrc())){
+            user.setAvatarSrc("https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png");
+        }
         return ParseResponseParam.parse(user);
     }
 
@@ -81,7 +85,6 @@ public class UserController {
         if(userService.existName(user.getUserName())){
            return new ErrorResponse("用户名已存在");
         }
-        System.out.println("---------"+user+"---------");
         User result=userService.register(user);
         if(result!=null){
             return new SuccessResponse();
@@ -110,6 +113,9 @@ public class UserController {
         }
         User sessionUser=(User)req.getSession().getAttribute("session");
         if(sessionUser!=null&&sessionUser.getUserName().equals(user.getUserName())){
+            if(StrUtil.isEmpty(user.getAvatarSrc())){
+                user.setAvatarSrc("https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png");
+            }
             return ParseResponseParam.parse(user);
         }
         return new ErrorResponse("刷新失败");
@@ -117,16 +123,13 @@ public class UserController {
 
     @ResponseBody
     @RequestMapping("/logout")//用户退出
-    public SuccessResponse logout(HttpServletRequest req, @RequestBody JSONObject j){
-        SuccessResponse r=new SuccessResponse();
+    public ResponseUtil logout(HttpServletRequest req, @RequestBody JSONObject j){
         boolean s=(boolean)j.get("isLogin");
         if(!s){
             req.getSession().invalidate();
-            r.setStatus("success");
-            return r;
+            return new SuccessResponse();
         }
-        r.setStatus("error");
-        return r;
+       return new SuccessResponse();
     }
 
     //==========================================
@@ -136,7 +139,7 @@ public class UserController {
         User user=ParseRequestParam.parse(data);
         User sessionUser=(User)req.getSession().getAttribute("session");
         if(user==null||sessionUser==null||StrUtil.isEmpty(user.getAccount())||StrUtil.isEmpty(sessionUser.getAccount())){
-            return new ErrorResponse("error","data is null");
+            return new ErrorResponse("data is null");
         }
         if(!user.getAccount().equals(sessionUser.getAccount())){
             return new ErrorResponse("data is not equals");
@@ -172,7 +175,6 @@ public class UserController {
         return new ErrorResponse("password error");
     }
 
-
     @ResponseBody
     @RequestMapping("updatePassword")//修改密码
     public ResponseUtil updatePassword(@RequestBody String data,HttpServletRequest req){
@@ -196,7 +198,6 @@ public class UserController {
         return new ErrorResponse("update password is null");
     }
 
-
     @ResponseBody
     @RequestMapping("/setReceiptInfo")//设置收货信息
     public ResponseUtil setReceiptInfo(@RequestBody String data,HttpServletRequest req){
@@ -217,6 +218,7 @@ public class UserController {
         }
         return new ErrorResponse("setReceiptInfo error");
     }
+
 
 
     @ResponseBody

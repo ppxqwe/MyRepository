@@ -1,19 +1,142 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+    <meta charset="utf-8">
+    <title></title>
 </head>
-<body>
+<style>
+    *, *:before, *:after {
+        box-sizing: inherit;
+    }
+    * {margin:0;padding:0;border:0 none; position: relative;}
+    html {
+        background: #000;
+        height: 100vh;
+        box-sizing: border-box;
+    }
+    article {
+        display: flex;
+        justify-content: space-around;
+        width: 100vw;
+        height: 100vh;
+        position: fixed;
+        top:0; left:0;
+        overflow: hidden;
+        animation: blur 11s infinite;
+    }
+    @keyframes blur {
+        23% {filter: url(#none);}
+        24% {filter: url(#svg-blur-h);}
+        25% {filter: url(#none);}
+        26% {filter: url(#svg-blur-h);}
+        27% {filter: url(#none);}
+        28% {filter: url(#svg-blur-h);}
+        35% {filter: url(#none);}
+        80% {filter: url(#none);}
+        81% {filter: url(#svg-blur-v);}
+        87% {filter: url(#none);}
+        88% {filter: url(#svg-blur-v);}
+        89% {filter: url(#none);}
+    }
+    pre {
+        color: #80FF00;
+        text-shadow: 0 0 2px #60F000, 1px -1px 2px #60F000;
+        font-weight: 400;
+        font-size: 1.5rem;
+        text-decoration: none;
+        letter-spacing: .3rem;
+        word-spacing: 1rem;
+        padding: 1rem 0;
+        writing-mode: vertical-rl;
+        -webkit-text-orientation: upright;
+        -moz-text-orientation: upright;
+        text-orientation: upright;
+        transform: translatey(-100%);
+        animation: matrix linear 30s infinite;
+    }
+    @keyframes matrix {
+        100% {
+            transform: translatey(100%);
+        }
+    }
+    pre:nth-child(5n+1) {
+        animation-delay: 1s;
+        animation-duration: 13s;
+    }
+    pre:nth-child(5n+2) {
+        animation-delay: 1.33s;
+        animation-duration: 53s;
+    }
+    pre:nth-child(5n+3) {
+        animation-delay: -1s;
+        animation-duration: 29s;
+    }
+    pre:nth-child(4n) {
+        animation-delay: -2s;
+        animation-duration: 43s;
+    }
 
-<form action="/saveImg" method="POST" enctype="multipart/form-data">
-    <input type="text" name="name" value="">
-    <br>
-    <input type="file" name="avatarFile" value="">
-    <input type="submit" value="提交">
-</form>
-<a href="/test">测试</a>
-<a href="/logout"> 退出</a>
+    .hide {
+        position: absolute;
+        height: 0; width: 0;
+        overflow: 0;
+        left: -100%;
+    }
+    .aviso {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        background: #80FF00;
+        color: #009000;
+        font-weight: 400;
+        padding: .5rem;
+        border-radius: 0 5px 0 0;
+        box-shadow: 0 0 4px rgba(0,0,0,.4);
+        z-index: 1;
+    }
+    .aviso a {
+        text-decoration: none;
+        color: #000;
+    }
+</style>
+<body>
+<article>
+    <pre>但是 房地产开发商 在所需方向大海，如果谁觉得 它永远是 存在的开发者 没事的实践中，凭借本披露声明和两个做法毫无疑问不厌其烦地通过  可见的便利性 不会阻止他的怒气</pre>
+    <pre>испан CSS жылы ksesocss мүмкін үздік блог айтады</pre>
+    <pre>ہسپانوی سی ایس ایس میں ممکنہ طور پر سب سے بہترین بلاگ کہنا</pre>
+    <pre>אבער גרונטייגנס דעוועלאָפּערס אין די געבעטן ריכטונג ים, און די קאַנוויניאַנס פון די וואס טראַכטן עס אלץ געווען פאָרשטעלן אין די פיר פון דעוועלאָפּערס, אַלע רעכט, דורך מייַלע פון דעם אַנטפּלעקונג ויסזאָגונג און צוויי פיר קיין קשי</pre>
+    <pre>スタイル上品な冒険家とのウェブサイトのため、スタイル上品な冒険家Ksesocssスペイン最高のブログのCSS、と言うと、ウェブサイトのために、たとえば、スペイン最高のブログのCSSをKsesocss</pre>
+    <pre>פּיינז צו ווערן געזען דורך פאַסיליסי עס וואָלט נישט פאַרמייַדן אים צו כּעס נעגלעגענטור קאָנסעטעטור נעגלעגענטור מיר ווילן אַ כייַע אַז פייַנט kseso</pre>
+    <pre>קסעסאָקסס עפשער דער בעסטער בלאָג אין Spanish קסס קסס פאַרקויפער זאָגן ענרעדיקווע אַ מאָדערן וועבזייַטל פֿאַר טאַסטעפוללי אַרגינאַוטאַס</pre>
+    <pre>但是，房地 产开发商 在所需 方向大海 如果谁 觉得它 kseso 永远是 存在的 开发者 没事的实践中，凭借本披 露声明 和两个做法毫无疑问不厌其烦 地通过 可见的便 利性也不 会阻 止他的怒气</pre>
+    <pre>אבל מפתחי הנדל"ן בים לכיוון הרצוי, ואת הנוחות של אלה שחושבים שזה אי פעם נכח באימון של מפתחים, בסדר, מכוח הצהרת גילוי זו ושתי בפועל אין כאבי שאלה להיראות על ידי facilisi זה לא</pre>
+    <pre>但是，房地产开发商 在所需 方向大海，如果 谁觉得它 永远是存在 的开发者，没事的实践中 凭借 本披露声 明和两个做法毫无疑问不 厌其烦地通过  kseso  可见的便利 性也不会阻止他的怒气</pre>
+    <pre>ہسپانوی سی ایس ایس میں ممکنہ طور پر سب سے بہترین بلاگ کہنا  ہسپانوی سی ایس ایس میں ممکنہ طور پر سب سے بہترین بلاگ کہنا ہسپانوی سی ایس ایس میں ممکنہ طور پر سب سے بہترین بلاگ کہنا</pre>
+    <pre>但是，房地 产开发商 在所需 方向大海 如果谁 觉得它 永远是 存在的 开发者 没事的实践中，凭借本披 露声明 和两个做法毫无疑问不厌其烦 地通过 可见的便 利性也不 会阻 止他的怒气</pre>
+    <pre>אבער גרונטייגנס דעוועלאָפּערס אין די געבעטן ריכטונג ים, און די קאַנוויניאַנס פון די וואס טראַכטן עס אלץ געווען פאָרשטעלן אין די פיר פון דעוועלאָפּערס, אַלע רעכט, דורך מייַלע פון דעם אַנטפּלעקונג ויסזאָגונג און צוויי פיר קיין קשיא פּיינז צו ווערן געזען דורך פאַסיליסי עס וואָלט נישט פאַרמייַדן אים צו כּעס נעגלעגענטור קאָנסעטעטור נעגלעגענטור מיר ווילן אַ כייַע אַז פייַנט
+</pre>
+    <pre>但是，房地 产开发商 在所需 方向大海 如果谁 觉得它 永远是 存在的 开发者 没事的实践中，凭借本披 露声明 和两个做法毫无疑问不厌其烦 地通过 可见的便 利性也不 会阻 止他的怒气</pre>
+    <pre>אבל מפתחי הנדל"ן בים לכיוון הרצוי, ואת הנוחות של אלה שחושבים שזה אי פעם נכח באימון של מפתחים, בסדר, מכוח הצהרת גילוי זו ושתי בפועל אין כאבי שאלה להיראות על ידי facilisi זה לא</pre>
+    <pre>קסעסאָקסס עפשער דער בעסטער בלאָג אין Spanish קסס קסס פאַרקויפער זאָגן ענרעדיקווע אַ מאָדערן וועבזייַטל פֿאַר טאַסטעפוללי אַרגינאַוטאַס</pre>
+    <pre>부동산 바다의 일부 그리고 밖으로의 장점으로 개발자를달라고하지만 수있다 그러나 그의 영원한 차이를 가정합니다 그것의 사용은, 세계는 언제든지로부터 도출 오른쪽의 모든 전력의 시작 그것은 두 가지 의견을 열었다 그에게 질문의 사용 고통 그하자 없다 그는</pre>
+    <pre>אבל מפתחי הנדל"ן בים לכיוון הרצוי, ואת הנוחות של אלה שחושבים שזה אי פעם נכח באימון של מפתחים, בסדר, מכוח הצהרת גילוי זו ושתי בפועל אין כאבי שאלה להיראות על ידי facilisi זה לא</pre>
+    <pre>スタイル上品な冒険家とのウェブサイトのため、スタイル上品な冒険家Ksesocssスペイン最高のブログのCSS、と言うと、ウェブサイトのために、たとえば、スペイン最高のブログのCSSをKsesocss</pre>
+    <pre>אבער kseso גרונטייגנס דעוועלאָפּערס אין די געבעטן ריכטונג ים, און די קאַנוויניאַנס פון די וואס טראַכטן עס אלץ געווען פאָרשטעלן אין די פיר פון דעוועלאָפּערס, אַלע רעכט, דורך מייַלע פון דעם אַנטפּלעקונג ויסזאָגונג און צוויי פיר קיין קשיא פּיינז צו ווערן געזען דורך פאַסיליסי עס וואָלט נישט פאַרמייַדן אים צו כּעס נעגלעגענטור קאָנסעטעטור נעגלעגענטור מיר ווילן אַ כייַע אַז פייַנט
+</pre>
+    <pre>但是，房地 产开发商 在所需 方向大海 如果谁 觉得它 永远是 存在的 开发者 没事的实践中，凭借本披 露声明 和两个做法毫无疑问不厌其烦 地通过  kseso  可见的便 利性也不 会阻 止他的怒气</pre>
+    <pre>但是，房地 产开发商 在所需 方向大海 如果谁 觉得它 永远是 存在的 开发者 没事的实践中，凭借本披 露声明 和两个做法毫无疑问不厌其烦 地通过 可见的便 利性也不 会阻 止他的怒气</pre>
+    <pre>אבל מפתחי הנדל"ן בים לכיוון הרצוי, ואת הנוחות של אלה שחושבים שזה אי פעם נכח באימון של מפתחים, בסדר, מכוח הצהרת גילוי זו ושתי בפועל אין כאבי שאלה להיראות על ידי facilisi זה לא</pre>
+    <pre>但是，房地 产开发商 在所需 方向大海 如果谁 觉得它 永远是 存在的 开发者 没事的实践中，凭借本披 露声明 和两个做法毫无疑问不厌其烦 地通过   kseso   可见的便 利性也不 会阻 止他的怒气</pre>
+</article>
+<svg class='hide' xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <filter id='svg-blur-h'>
+            <feGaussianBlur stdDeviation='5,0' />
+        </filter>
+        <filter id='svg-blur-v'>
+            <feGaussianBlur stdDeviation='0,10' />
+        </filter>
+    </defs>
+</svg>
 </body>
 </html>

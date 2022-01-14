@@ -37,22 +37,22 @@
             <include refid="allColumns" />
         FROM product p WHERE 1 = 1
         <if test="titleId != null and titleId != ''">
-            AND p.titleId LIKE CONCAT('%', #{titleId}, '%')
+            AND p.titleId =#{titleId}
         </if>
         <if test="name != null and name != ''">
-            AND p.name LIKE CONCAT('%', #{name}, '%')
+            AND p.name = #{name}
         </if>
         <if test="curPrice != null and curPrice != ''">
-            AND p.curPrice LIKE CONCAT('%', #{curPrice}, '%')
+            AND p.curPrice = #{curPrice}
         </if>
         <if test="oriPrice != null and oriPrice != ''">
-            AND p.oriPrice LIKE CONCAT('%', #{oriPrice}, '%')
+            AND p.oriPrice= #{oriPrice}
         </if>
         <if test="description != null and description != ''">
-            AND p.description LIKE CONCAT('%', #{description}, '%')
+            AND p.description = #{description}
         </if>
         <if test="imgSrc != null and imgSrc != ''">
-            AND p.imgSrc LIKE CONCAT('%', #{imgSrc}, '%')
+            AND p.imgSrc =#{imgSrc}
         </if>
 
         <if test="start !=null and num !=null">
