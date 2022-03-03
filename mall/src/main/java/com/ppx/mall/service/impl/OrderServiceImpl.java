@@ -1,5 +1,6 @@
 package com.ppx.mall.service.impl;
 
+import cn.hutool.core.util.RandomUtil;
 import com.ppx.mall.bean.Product;
 import com.ppx.mall.bean.ProductOrder;
 import com.ppx.mall.dao.OrderDao;
@@ -54,6 +55,7 @@ public class OrderServiceImpl implements OrderService {
                 vo.setTime( df.format(p.getTime()));
                 vo.setAllCount(p.getCount());
                 vo.setAllCost(p.getCost());
+                vo.setOrderId(p.getAccount().substring(5,8)+p.getTime().getTime()/100+ RandomUtil.randomNumbers(4));
                 //设置订单详细商品信息
                 List<ProductInfo> productInfos=new ArrayList<>();
                 String s=p.getProductIds();
@@ -72,6 +74,7 @@ public class OrderServiceImpl implements OrderService {
                     productInfo.setPrice(Double.parseDouble(product.getCurPrice().replace("元","")));
                     productInfo.setCount(count);
                     productInfo.setCost(productInfo.getPrice()*count);
+
                     productInfos.add(productInfo);
                 }
                 vo.setCommodities(productInfos);
@@ -79,5 +82,10 @@ public class OrderServiceImpl implements OrderService {
             }
         }
         return viewOrders;
+    }
+
+    @Override
+    public int deleteProductOrderByIds(List<Long> ids) {
+        return orderDao.deleteProductOrderByIds(ids);
     }
 }

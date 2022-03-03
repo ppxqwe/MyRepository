@@ -11,5 +11,5 @@ public class ViewOrder {
     private String time;
     private Integer allCount;
     private Double allCost;
-
+    private String orderId; //订单编号
 }

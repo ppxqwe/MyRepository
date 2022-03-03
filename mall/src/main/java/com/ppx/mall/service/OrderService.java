@@ -8,4 +8,5 @@ import java.util.List;
 public interface OrderService {
     int addProductOrder(ProductOrder productOrder);
     List<ViewOrder> getViewOrder(String account);
+    int deleteProductOrderByIds(List<Long> ids);
 }

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -36,21 +37,27 @@ public class OrderController {
         if(ids==null||ids.size()==0){
             return new ErrorResponse("没有要购买的商品");
         }
-        Long[] longs=new Long[ids.size()];
+
         ProductOrder productOrder=new ProductOrder();
         int count=0;
         Double cost=0.0;
         StringBuffer sb=new StringBuffer();
         for(int i=0;i<ids.size();i++){
-            longs[i]=Long.parseLong(ids.get(i).toString());
+            Long cartId=Long.parseLong(ids.get(i).toString());
             //去购物车找到对应商品
-            Cart cart=cartService.findCartByAccountAndProductId(account,longs[i]);
+            //Cart cart=cartService.findCartByAccountAndProductId(account,productId);
+            Cart cart=cartService.findCartById(cartId);
             if(cart!=null){
-                count+=cart.getCount();
-                cost=cost+cart.getCost();
-                sb.append(cart.getProductId()+":"+cart.getCount()+",");
-                cartService.deleteCartById(cart.getId());  //删除购物车
+                if(cart.getAccount().equals(account)){
+                    count+=cart.getCount();
+                    cost=cost+cart.getCost();
+                    sb.append(cart.getProductId()+":"+cart.getCount()+",");
+                    cartService.deleteCartById(cart.getId());  //删除购物车
+                }
             }
+        }
+        if(count==0){
+            return new ErrorResponse("没有找到商品");
         }
         productOrder.setAccount(account);
         productOrder.setProductIds(sb.toString());
@@ -73,6 +80,21 @@ public class OrderController {
         SuccessResponse sr=new SuccessResponse();
         sr.addMessage("order",viewOrders);
         return sr;
+    }
+
+    @ResponseBody
+    @RequestMapping("/deleteOrder")
+    public ResponseUtil deleteOrder(@RequestBody JSONObject json){
+        List ids=(List)json.get("ids");
+        if(ids==null||ids.size()<1){
+            return new ErrorResponse("参数为空");
+        }
+        List<Long> ids1=new ArrayList<>();
+        for(int i=0;i<ids.size();i++){
+            ids1.add(Long.parseLong(ids.get(i).toString()));
+        }
+        orderService.deleteProductOrderByIds(ids1);
+        return new SuccessResponse();
     }
 
 

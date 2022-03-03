@@ -1,6 +1,7 @@
 package com.ppx.mall;
 
 import cn.hutool.core.codec.Base64;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.crypto.digest.DigestUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -305,10 +306,6 @@ class MallApplicationTests {
         /*SimpleDateFormat df=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//日期的格式化
         String v=df.format(new Date());
         System.out.println(v);*/
-        String s="1:2,2:1,";
-        String[] strings=s.split(",");
-        System.out.println(strings.length);
-        System.out.println(strings[0].length()+"-"+strings[1].length());
     }
 
 

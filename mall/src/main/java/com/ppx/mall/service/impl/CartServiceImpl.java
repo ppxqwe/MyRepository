@@ -35,7 +35,7 @@ public class CartServiceImpl implements CartService {
         map.put("account",account);
         map.put("productId",productId);
         List<Cart> carts= cartDao.findCartByCondition(map);
-        if(carts.size()>=1){
+        if(carts.size()>0){
             return carts.get(0);
         }
         return null;

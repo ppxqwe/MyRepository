@@ -8,4 +8,5 @@ import java.util.Map;
 public interface OrderDao {
     int addProductOrder(ProductOrder productOrder);
     List<ProductOrder> findProductOrderByCondition(Map<String,Object> map);
+    int deleteProductOrderByIds(List<Long> ids);
 }
